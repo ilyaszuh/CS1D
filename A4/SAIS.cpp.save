@@ -1,0 +1,95 @@
+#include "SAIS.h"
+#include <iostream>
+using namespace std;
+
+SuffixArray sais(const vector<size_t>& text)
+{
+//Need to also find number of buckts
+//Make array initialized to 0
+//Make it size of ascii table 128
+//For to go through each elemend of the text
+//Get the ascii value of each char, go to place in array and ++
+//Make 2d array for head and tail pointers
+	vector<int> bucketCount(27, 0);
+	vector<char> ls(text.size(), -1);
+	vector<int> lms(text.size(), -1);
+	vector<size_t> sa(text.size(), -1);
+	size_t numBuckets = 0;
+	int n = 0;
+	cout << "Text string: \n";
+	for(size_t i = 0; i < text.size(); i++)
+	{
+		cout << text[i] << ", ";
+	}
+	cout << endl;
+
+	for(size_t i = 0; i < text.size(); i++)
+	{
+		n++;
+	}
+	ls[n - 1] = 's';
+	for(int i = n - 1; i >= 0; i--)
+	{
+		if(text[i - 1] < text[i])
+		{
+			ls[i - 1] = 's';
+		}
+		else if(text[i - 1] > text[i])
+		{
+			ls[i - 1] = 'l';
+		}
+		else
+		{
+			ls[i - 1] = ls[i];
+		}
+	}
+	for(int i = 0; i < n; i++)
+	{
+		bucketCount[text[i]]++;
+	}
+
+	cout << "Number of buckets:\n";
+	for(int i = 0; i < n; i++)
+	{
+		cout << bucketCount[i] << ", ";
+	}
+	cout << endl;
+
+	cout << "LS array:\n";
+	for(int i = 0; i < n; i++)
+	{
+		cout << ls[i] << ", ";
+	}
+	cout << endl;
+
+	for(int i = 0; i < n; i++)
+	{
+		if(ls[i - 1] == 'l' && ls[i]== 's')
+		{
+			lms[i] = i;
+		}
+		if(i == 0)
+		{
+			lms[i] = -1;
+		}
+	}
+
+	cout << "LMS array:\n";
+	for(int i = 0; i < n; i++)
+	{
+		cout << lms[i] << ", ";
+	}
+	cout << endl;
+
+	int index = 0;
+	while(bucketCount[index] != 0)
+	{
+		numBuckets++;
+		index++;
+	}
+	cout << "Num buckets = " << numBuckets << endl;
+	vector<vector<int>> vec2D(numBuckets, vector<int>(2, 0));
+
+
+  return {};
+}
