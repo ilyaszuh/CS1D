@@ -1,0 +1,225 @@
+#include <fstream>
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+void bubbleSort(int arr[], int arrSize);
+void mergeSort(int arr[], int start, int end);
+void merge(int arr[], int start, int mid, int end);
+void InsertionSort(int arr[], const int arrSIZE);
+
+int main(int argc, char *argv[])
+{
+
+	int arrSIZE = 0;
+	int *arr;
+	int index = 0;
+	string fileName = argv[1];
+   ifstream inFile(fileName);
+	int tempNum = 0;
+	while(!inFile.eof())
+	{
+		inFile >> tempNum;
+		arrSIZE++;
+		tempNum = 0;
+	}
+	inFile.close();
+	arrSIZE--;
+   arr = new int[arrSIZE];
+	inFile.open(fileName);
+
+	while(!inFile.eof() && index < arrSIZE)
+	{
+		inFile >> arr[index];
+		index++;
+	}
+
+	 switch(*argv[2])
+    {
+        case '0':
+			cout << "Calling insertion sort" << endl;
+    		InsertionSort(arr, arrSIZE);
+			cout << "Done calling insertion sort" << endl;
+        break;
+        case '1':
+        	cout << "Calling merge sort" << endl;
+			mergeSort(arr, 0, arrSIZE - 1);
+			cout << "Done calling merge sort" << endl;
+        break;
+        case '2':
+         cout << "Calling bubble sort" << endl;
+			bubbleSort(arr, arrSIZE);
+			cout << "Done calling bubble sort" << endl;
+        break;
+
+        case '3':
+            cout << "Case 3\n";
+        break;
+
+        case '4':
+            cout << "Case 4\n";
+        break;
+
+        case '5':
+            cout << "Case 5\n";
+        break;
+
+        case '6':
+            cout << "Case 6\n";
+        break;
+    }
+
+	delete [] arr;
+	inFile.close();
+	return 0;
+}
+
+void InsertionSort(int arr[], const int arrSIZE)
+{
+    int key = 0;
+    int i = 0;
+    for(int j = 1; j < arrSIZE; j++)
+    {
+        key = arr[j];
+        i = j - 1;
+        while(i >= 0 && arr[i] > key)
+        {
+            arr[i + 1] = arr[i];
+            i--;
+        }
+        arr[i + 1] = key;
+    }
+}
+
+
+void merge(int arr[], int start, int mid, int end)
+{
+  int len1 = mid - start + 1;
+  int len2 = end - mid;
+
+  int leftArr[len1], rightArr[len2];
+
+  for (int i = 0; i < len1; i++)
+    leftArr[i] = arr[start + i];
+  for (int j = 0; j < len2; j++)
+    rightArr[j] = arr[mid + 1 + j];
+
+  int i, j, k;
+  i = 0;
+  j = 0;
+  k = start;
+
+  while (i < len1 && j < len2) {
+    if (leftArr[i] <= rightArr[j]) {
+      arr[k] = leftArr[i];
+      i++;
+    } else {
+      arr[k] = rightArr[j];
+      j++;
+    }
+    k++;
+  }
+
+  while (i < len1) {
+    arr[k] = leftArr[i];
+    i++;
+    k++;
+  }
+
+  while (j < len2) {
+    arr[k] = rightArr[j];
+    j++;
+    k++;
+  }
+}
+
+void mergeSort(int arr[], int start, int end)
+{
+  if (start < end) {
+    int mid = start + (end - start) / 2;
+
+    mergeSort(arr, start, mid);
+    mergeSort(arr, mid + 1, end);
+
+    merge(arr, start, mid, end);
+  }
+}
+
+void bubbleSort(int arr[], int arrSize) {
+    for (int i = 0; i < arrSize - 1; i++) {
+        for (int j = 0; j < arrSize - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int Parent(int index)
+{
+    return (floor(index/2));
+}
+int Left(int index)
+{
+    return (2 * index);
+}
+int Right(int index)
+{
+    return ((2 * index) + 1); 
+}
+
+void MaxHeapify(int arr[], int arrSIZE, int index)
+{
+    int largest = 0;
+    int temp = 0;
+    int left = Left(index);
+    int right = Right(index);
+
+    if(left <= arrSIZE && arr[left] > arr[index])
+    {
+        largest = left;
+    }
+    else
+    {
+        largest = index;
+    }
+
+    if(right <= arrSIZE && arr[right] > arr[largest])
+    {
+        largest = right;
+    }
+    if(largest != index)
+    {
+        temp = arr[largest];
+        arr[largest] = arr[index];
+        arr[index] = temp;
+        MaxHeapify(arr, arrSIZE, largest);
+    }
+}
+
+void BuildMaxHeap(int arr[], int arrSIZE)
+{
+    int tempArrSize = arrSIZE;
+    for(int i = floor(tempArrSize / 2); i > 1; i--)
+    {
+        MaxHeapify(arr, arrSIZE, i);
+    }
+}
+
+void HeapSort(int arr[], int arrSIZE)
+{
+    int temp = 0;
+    BuildMaxHeap(arr, arrSIZE);
+    for(int i = arrSIZE; i > 2; i--)
+    {
+        temp = arr[i];
+        arr[i] = arr[1];
+        arr[1] = temp;
+
+        arrSIZE = arrSIZE - 1;
+        MaxHeapify(arr, arrSIZE, 1);
+    }
+}
