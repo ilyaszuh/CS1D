@@ -1,2 +1,2 @@
 # CS1D
-*1. Spring 2024 with Dr. Barnett*
+**Spring 2024 with Dr. Barnett**
